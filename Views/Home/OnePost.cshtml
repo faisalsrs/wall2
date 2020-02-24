@@ -1,0 +1,16 @@
+@model Post
+
+<a asp-action="logout" asp-controller="Home">Logout</a>
+<a asp-action="wall" asp-controller="Home">Bright Ideas</a>
+
+<h1> @Model.Creator.fname</h1>
+<h2> says: @Model.Content</h2>
+@foreach (Vote likes in @Model.Votes){
+<p>People who liked this posts: </p>
+<td>
+   <a class="card-subtitle mb-2 text-danger" asp-action="OneUser" asp-route-UserId="@likes.UserId" asp-controller="Home">@likes.UserVoted.alias </a>
+</td>
+<td>
+    @likes.UserVoted.fname 
+</td>
+}

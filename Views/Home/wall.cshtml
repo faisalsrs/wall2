@@ -1,0 +1,62 @@
+@model successModel
+
+<h1>Welcome @Model.userLogged.fname!</h1>
+
+<h1> Welcome to Bright Ideas</h1>
+
+<a asp-action="logout" asp-controller="Home">Logout</a>
+<a asp-action="wall" asp-controller="Home">The Wall</a>
+
+<p>@TempData["errors"]</p>
+
+<form asp-controller="Home" asp-action="newPost" method="Post">
+    <div class="form-group">
+        <span class="text-danger font-weight-bold" asp-validation-for="post.Content"></span>
+        <label asp-for="post.Content"></label>
+        <textarea class="form-control" asp-for="post.Content"></textarea>
+        <button class="btn btn-info">Submit!</button>
+    </div>
+</form>
+
+@foreach(var post in Model.allP){
+    <div class="card">
+        <div class="card-body">
+            <a class="card-subtitle mb-2 text-danger" asp-action="OnePost" asp-route-PostId="@post.PostId" asp-controller="Home">@post.Creator.fname says: </a>
+            <p class="card-text">@post.Content</p>
+            <p class="text-muted">Posted on: @post.CreatedAt</p>
+            @if(post.UserId == Model.userLogged.UserId){
+                <form mathod="post" asp-action="delete" asp-controller="Home" asp-route-pId="@post.PostId">
+                    <button class="btn btn-outline-warning">Delete</button>
+                </form>
+            }
+            @{var didVote = post.Votes.FirstOrDefault(u=>u.UserId==post.UserId);} 
+            <p>@post.Votes.Count people like this !</p>
+            @if(didVote==null){ // if no voted found by the user that is logged in on this post show wmpty buttons
+                <div class="form-check form-check-inline float-right">
+                    <form asp-controller="Home" asp-action="Vote" asp-route-vote="true" asp-route-pId="@post.PostId">
+                        <button class="form-check-input btn btn-outline-success">&uarr;</button>
+                    </form>
+                    <form asp-controller="Home" asp-action="Vote" asp-route-vote="false" asp-route-pId="@post.PostId">
+                        <button class="form-check-input btn btn-outline-danger">&darr;</button>
+                    </form>
+                </div>
+            }else{
+                if(didVote.IsUpvote==true){ // if found and is upvote, color the upvote button
+                    <form asp-controller="Home" asp-action="Vote" asp-route-vote="true" asp-route-pId="@post.PostId">
+                        <button class="btn btn-success">&uarr;</button>
+                    </form>
+                    <form asp-controller="Home" asp-action="Vote" asp-route-vote="false" asp-route-pId="@post.PostId">
+                        <button class="form-check-input btn btn-outline-danger">&darr;</button>
+                    </form>
+                }else{ // if found and is downvote, color the downvote button
+                    <form asp-controller="Home" asp-action="Vote" asp-route-vote="true" asp-route-pId="@post.PostId">
+                        <button class="form-check-input btn btn-outline-success">&uarr;</button>
+                    </form>
+                    <form asp-controller="Home" asp-action="Vote" asp-route-vote="false" asp-route-pId="@post.PostId">
+                        <button class="btn btn-danger" >&darr;</button>
+                    </form>
+                }
+            }
+        </div>
+    </div>
+}

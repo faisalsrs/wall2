@@ -1,0 +1,18 @@
+@User
+
+<a asp-action="logout" asp-controller="Home">Logout</a>
+<a asp-action="wall" asp-controller="Home">Bright Ideas</a>
+
+<h1> Name: @Model.fname</h1>
+<h2> Alias: @Model.alias</h2>
+<h2> Email: @Model.email</h2>
+
+<br>
+
+
+@* @foreach (var likes in @Model.Vote){
+<p>Total Number of Posts: @likes.UserId.postsCreated.Count</p>
+<p>Total Number of Likes: @likes.Votes.PostId.Count</p>
+<p>@likes.Votes.Count</p> 
+
+} *@
